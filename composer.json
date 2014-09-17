@@ -3,9 +3,9 @@
 	"description" : "A CLI toolkit for fluid command line interaction",
 	"license"     : "proprietary",
 	"require"     : {},
-	"autoload": {
+	"autoload"    : {
 		"psr-4": {
-			"BitMoth\\": "src/"
+			"Cli\\": "src/"
 		}
 	}
 }
