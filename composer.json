@@ -1,0 +1,6 @@
+{
+	"name"        : "BitMoth/Cli",
+	"description" : "A CLI toolkit for fluid command line interaction",
+	"license"     : "proprietary",
+	"require"     : {}
+}
