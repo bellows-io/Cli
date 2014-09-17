@@ -1,6 +1,6 @@
 <?php
 
-namespace BitMoth\Cli\Gui;
+namespace Cli\Gui;
 
 class Row {
 

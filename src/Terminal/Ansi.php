@@ -1,6 +1,6 @@
 <?php
 
-namespace BitMoth\Cli\Terminal;
+namespace Cli\Terminal;
 
 class Ansi {
 
