@@ -31,9 +31,20 @@ class Ansi {
 		$this->escape = $escape;
 	}
 
-	public function moveHome($row = '', $column = '') {
+	public function setPosition($row = '', $column = '') {
 		$this->command("${row};${column}H");
 		return $this;
+	}
+
+	public function getPosition() {
+		return explode(';', $this->request('6n'));
+	}
+
+	public function getSize() {
+		$cols = (int)`tput cols`;
+		$lines = (int)`tput lines`;
+
+		return [$cols, $lines];
 	}
 
 	public function move($up = 0, $forward = 0) {
@@ -128,10 +139,6 @@ class Ansi {
 		$str = call_user_func_array('sprintf', func_get_args());
 		fwrite($this->stream, $str);
 		return $this;
-	}
-
-	public function getPosition() {
-		return explode(';', $this->request('6n'));
 	}
 
 	public function getStatus() {
