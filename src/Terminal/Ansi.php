@@ -41,10 +41,15 @@ class Ansi {
 	}
 
 	public function getSize() {
-		$cols = (int)`tput cols`;
-		$lines = (int)`tput lines`;
+		return [$this->getWidth(), $this->getHeight()];
+	}
 
-		return [$cols, $lines];
+	public function getWidth() {
+		return (int)`tput cols`;
+	}
+
+	public function getHeight() {
+		return (int)`tput lines`;
 	}
 
 	public function move($up = 0, $forward = 0) {
@@ -124,8 +129,7 @@ class Ansi {
 		return $this;
 	}
 
-	public function format(/** $codes **/) {
-		$codes = func_get_args();
+	public function format($codes) {
 		$this->command(implode(';', $codes).'m');
 		return $this;
 	}
@@ -145,11 +149,9 @@ class Ansi {
 		return $this->request('5n');
 	}
 
-
 	protected function command($string) {
 		fwrite($this->stream, $this->escape.'['.$string);
 	}
-
 
 	protected function request($code) {
 		$term = `stty -g`;
