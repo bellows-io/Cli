@@ -2,22 +2,22 @@
 
 namespace Cli\Gui;
 
+use \Cli\Gui\Traits\RowMemoryTrait;
+
 class Row {
 
-	protected $row;
+	use RowMemoryTrait;
 
-	public function __construct($terminal, $row = null) {
+	protected $terminal;
+
+	public function __construct($terminal, $lastRow = null) {
 		$this->terminal = $terminal;
-		$this->row = $row;
+		$this->lastRow = $lastRow;
 	}
 
 	public function printf($format) {
-		if (is_null($this->row)) {
-			$this->terminal->printf('');
-			list($this->row) = $this->terminal->getPosition();
-		} else {
-			$this->terminal->setPosition($this->row, 0);
-		}
+
+		$this->rememberRow($this->terminal);
 
 		$args = func_get_args();
 		$args[0] = trim($format, "\n")."\n";
