@@ -31,7 +31,7 @@ class Ansi {
 		$this->escape = $escape;
 	}
 
-	public function setPosition($row = '', $column = '') {
+	public function setPosition($column = '', $row = '') {
 		$this->command("${row};${column}H");
 		return $this;
 	}

@@ -14,6 +14,7 @@ class ProgressBar {
 	protected $elapsedFormats;
 	protected $terminal;
 	protected $spinOffset;
+	protected $animationFrame;
 
 	public function __construct($label, $elapsedSymbol, $remainingSymbol, array $elapsedFormats, $terminal, $lastRow = null) {
 
@@ -23,6 +24,8 @@ class ProgressBar {
 		self::setElapsedFormats($elapsedFormats);
 
 		$this->spinOffset = 0;
+		$this->animationFrame = 0;
+
 		$this->terminal = $terminal;
 		$this->lastRow = $lastRow;
 	}
@@ -47,9 +50,11 @@ class ProgressBar {
 		$this->rememberRow($this->terminal);
 		$width = min($this->terminal->getWidth() - strlen($this->label) + 1, 30);
 
-		$base = str_repeat($this->elapsedSymbol, $width * 2);
+		$elapsedSymbol = $this->getElapsedSymbol();
+		$base = str_repeat($elapsedSymbol, $width * 2);
 		$offset = $this->spinOffset % $width;
 		$elapsedStr = substr($base, $width - $offset, $width);
+
 
 		$this->terminal
 			->eraseLine()
@@ -77,8 +82,9 @@ class ProgressBar {
 		$percent = $numerator / $denomenator;
 
 		$elapsed = ceil($percent * $width);
+		$elapsedSymbol = $this->getElapsedSymbol();
 
-		$elapsedStr = substr(str_repeat($this->elapsedSymbol, $elapsed), -$elapsed);
+		$elapsedStr = substr(str_repeat($elapsedSymbol, $elapsed), -$elapsed);
 		$remainingStr = substr(str_repeat($this->remainingSymbol, $width), $elapsed, ($width - $elapsed));
 
 		$this->terminal
@@ -89,9 +95,19 @@ class ProgressBar {
 			->resetFormatting()
 			->printf($remainingStr.' '.$details."\n");
 
+
+
 	}
 
-	public function message() {
+	protected function getElapsedSymbol() {
+		if (is_array($this->elapsedSymbol)) {
+			$this->animationFrame = ($this->animationFrame + 1) % count($this->elapsedSymbol);
+			return $this->elapsedSymbol[$this->animationFrame];
+		}
+		return $this->elapsedSymbol;
+	}
+
+	public function printf() {
 		$this->rememberRow($this->terminal);
 
 		$this->terminal->eraseLine();
