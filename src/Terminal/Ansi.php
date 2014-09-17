@@ -153,6 +153,23 @@ class Ansi {
 		fwrite($this->stream, $this->escape.'['.$string);
 	}
 
+	public function readInput($callback) {
+		$term = `stty -g`;
+
+		system("stty -icanon -echo");
+		$b = '';
+
+		while ($c = fread(STDIN, 1)) {
+			$out = $callback($c);
+			if ($out === true) {
+				break;
+			}
+		}
+
+		system("stty '".$term."'");
+
+	}
+
 	protected function request($code) {
 		$term = `stty -g`;
 

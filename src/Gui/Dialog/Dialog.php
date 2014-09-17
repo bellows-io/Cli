@@ -1,16 +1,16 @@
 <?php
 
-namespace Cli\Gui;
+namespace Cli\Gui\Dialog;
 
 use \Cli\Gui\Traits\RowMemoryTrait;
 
-class Box {
+class Dialog {
 
 	const SIZE_FULL = 0;
 	const SIZE_FIXED = 1;
 
-	public static $borderSetSingle = ['┌','─', '┐', '│', '┘', '─', '└', '│', ' '];
-	public static $borderSetDouble = ['╔','═', '╗', '║', '╝', '═', '╚', '║', ' '];
+	public static $borderSetSingle = ['┌','─', '┐', '│', '┘', '─', '└', '│', ' ', '├', '─', '┤'];
+	public static $borderSetDouble = ['╔','═', '╗', '║', '╝', '═', '╚', '║', ' ', '╟', '─', '╢	'];
 
 	protected $padding = 1;
 	protected $margin = 1;
@@ -18,8 +18,8 @@ class Box {
 	protected $sizeMode = 0;
 
 	protected $borderSet ="X.";
-	protected $boxFormats = [];
-	protected $shadowString = "` ";
+	protected $borderFormats = [];
+	protected $shadowString = "`";
 	protected $shadowFormats = [];
 
 	protected $height = null;
@@ -30,8 +30,8 @@ class Box {
 	protected $x = 1;
 	protected $y = 1;
 
-	protected $title = "Title";
-	protected $contents = "Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum ";
+	protected $title = "";
+	protected $contents = "";
 
 	protected $terminal;
 
@@ -70,7 +70,7 @@ class Box {
 		$this->shadowString = $string;
 	}
 
-	public function updateLayout() {
+	protected function updateLayout() {
 
 		$startX = $this->x;
 		$startY = $this->y;
@@ -84,18 +84,21 @@ class Box {
 			$height = 1 +$this->terminal->getHeight() - $startY - (2 * $this->margin);
 		}
 
-		$this->calculated = [$startX, $startY, $width, $height];
+
+		$innerWidth = ($width - $this->padding * 2) - 2;
+		$innerHeight = ($height - $this->padding * 2) - 2;
+
+		$this->calculated = [$startX, $startY, $width, $height, $innerWidth, $innerHeight];
 
 	}
 
-	public function draw() {
+	public function show() {
 		$this->updateLayout();
 
 		$this->drawBox();
 		$this->drawTitle();
 		$this->drawContents();
 		$this->drawShadow();
-
 	}
 
 	protected function drawBox() {
@@ -160,10 +163,8 @@ class Box {
 	protected function drawContents() {
 
 		if ($this->contents) {
-			list($startX, $startY, $width, $height) = $this->calculated;
+			list($startX, $startY, $width, $height, $innerWidth, $innerHeight) = $this->calculated;
 
-			$innerWidth = ($width - $this->padding * 2) - 2;
-			$innerHeight = ($height - $this->padding * 2) - 2;
 
 			$innerX = $startX + 1 + $this->padding;
 			$innerY = $startY + 1 + $this->padding;
