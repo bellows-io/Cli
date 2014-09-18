@@ -31,13 +31,14 @@ class Ansi {
 		$this->escape = $escape;
 	}
 
-	public function setPosition($column = '', $row = '') {
-		$this->command("${row};${column}H");
+	public function setPosition($x = '', $y = '') {
+		$this->command("${y};${x}H");
 		return $this;
 	}
 
 	public function getPosition() {
-		return explode(';', $this->request('6n'));
+		list($y, $x) = explode(';', $this->request('6n'));
+		return [$x, $y];
 	}
 
 	public function getSize() {

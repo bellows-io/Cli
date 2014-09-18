@@ -9,9 +9,9 @@ trait RowMemoryTrait {
 	protected function rememberRow($terminal) {
 		if (is_null($this->lastRow)) {
 			$terminal->printf('');
-			list($this->lastRow) = $terminal->getPosition();
+			list($_, $this->lastRow) = $terminal->getPosition();
 		} else {
-			$terminal->setPosition($this->lastRow, 0);
+			$terminal->setPosition(0, $this->lastRow);
 		}
 	}
 
