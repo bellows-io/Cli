@@ -9,6 +9,11 @@ class Dialog {
 	const SIZE_FULL = 0;
 	const SIZE_FIXED = 1;
 
+
+	const TEXT_ALIGN_LEFT = 0;
+	const TEXT_ALIGN_CENTER = 1;
+	const TEXT_ALIGN_RIGHT = 2;
+
 	public static $borderSetSingle = ['┌','─', '┐', '│', '┘', '─', '└', '│', ' ', '├', '─', '┤'];
 	public static $borderSetDouble = ['╔','═', '╗', '║', '╝', '═', '╚', '║', ' ', '╟', '─', '╢	'];
 
@@ -21,6 +26,8 @@ class Dialog {
 	protected $borderFormats = [];
 	protected $shadowString = "`";
 	protected $shadowFormats = [];
+
+	protected $textAlign = 0;
 
 	protected $height = null;
 	protected $width = null;
@@ -177,7 +184,15 @@ class Dialog {
 			}
 
 			foreach ($lines as $i => $line) {
-				$this->terminal->setPosition($innerX, $innerY + $i)->printf($lines[$i]);
+				$p = '';
+				if ($this->textAlign == self::TEXT_ALIGN_RIGHT) {
+					$w = floor($innerWidth - strlen($line));
+					$line = str_repeat(' ', $w).$line;
+				} else if ($this->textAlign == self::TEXT_ALIGN_CENTER) {
+					$w = floor(($innerWidth - strlen($line)) / 2);
+					$line = str_repeat(' ', $w).$line;
+				}
+				$this->terminal->setPosition($innerX, $innerY + $i)->printf($p.$line);
 			}
 		}
 	}

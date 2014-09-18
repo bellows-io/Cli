@@ -15,6 +15,7 @@ class Alert extends Dialog {
 		$this->title = $title;
 		$this->contents = $contents;
 		$this->options = $options;
+		$this->textAlign = self::TEXT_ALIGN_CENTER;
 
 	}
 
