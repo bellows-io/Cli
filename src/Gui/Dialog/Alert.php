@@ -14,7 +14,11 @@ class Alert extends Dialog {
 		parent::__construct($terminal);
 		$this->title = $title;
 		$this->contents = $contents;
-		$this->options = $options;
+		$o = [];
+		foreach ($options as $i => $option) {
+			$o[] = [$i, $option];
+		}
+		$this->options = $o;
 		$this->textAlign = self::TEXT_ALIGN_CENTER;
 
 	}
@@ -46,7 +50,7 @@ class Alert extends Dialog {
 		});
 
 		$this->terminal->resetFormatting();
-		return $option;
+		return $this->options[$option][0];
 	}
 
 	public function drawButtons($selected) {
@@ -59,11 +63,12 @@ class Alert extends Dialog {
 			->printf($top);
 
 
-		$length = strlen(join(' | ', $this->options)) + 2;
+		$options = array_map('end', $this->options);
+		$length = strlen(join(' | ', $options)) + 2;
 
 		$x = $startX + $width - $length - 1;
 		$this->terminal->setPosition($x, $startY + $height - 2);
-		foreach ($this->options as $i => $option) {
+		foreach ($options as $i => $option) {
 			if ($i > 0) {
 				$this->terminal->printf('|');
 			}
