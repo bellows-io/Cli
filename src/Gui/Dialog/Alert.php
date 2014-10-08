@@ -3,15 +3,16 @@
 namespace Cli\Gui\Dialog;
 
 use \Cli\Gui\Traits\RowMemoryTrait;
+use \Cli\Gui\Borderset\Borderset;
 
 class Alert extends Dialog {
 
 	protected $options;
 	protected $highlightFormat;
 
-	public function __construct($terminal, $title, $contents, array $options) {
+	public function __construct($terminal, $title, $contents, array $options, Borderset $borderset) {
 
-		parent::__construct($terminal);
+		parent::__construct($terminal, $borderset);
 		$this->title = $title;
 		$this->contents = $contents;
 		$o = [];
@@ -55,7 +56,10 @@ class Alert extends Dialog {
 
 	public function drawButtons($selected) {
 		list($startX, $startY, $width, $height, $innerWidth, $innerHeight) = $this->calculated;
-		$top = $this->makeLineFromBorder(9, 10, 11, $width);
+		$top = $this->makeLine(
+			$this->borderSet->getLeftIntersect(),
+			$this->borderSet->getInnerHorizontalEdge(),
+			$this->borderSet->getRightIntersect(), $width);
 
 		$this->terminal
 			->setPosition($startX, $startY + $height - 3)

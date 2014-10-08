@@ -3,19 +3,17 @@
 namespace Cli\Gui\Dialog;
 
 use \Cli\Gui\Traits\RowMemoryTrait;
+use \Cli\Gui\Element;
+use \Cli\Gui\Borderset\Borderset;
 
-class Dialog {
+class Dialog extends Element {
 
 	const SIZE_FULL = 0;
 	const SIZE_FIXED = 1;
 
-
 	const TEXT_ALIGN_LEFT = 0;
 	const TEXT_ALIGN_CENTER = 1;
 	const TEXT_ALIGN_RIGHT = 2;
-
-	public static $borderSetSingle = ['┌','─', '┐', '│', '┘', '─', '└', '│', ' ', '├', '─', '┤'];
-	public static $borderSetDouble = ['╔','═', '╗', '║', '╝', '═', '╚', '║', ' ', '╟', '─', '╢	'];
 
 	protected $padding = 1;
 	protected $margin = 1;
@@ -40,11 +38,10 @@ class Dialog {
 	protected $title = "";
 	protected $contents = "";
 
-	protected $terminal;
+	public function __construct($terminal, Borderset $borderSet) {
+		parent::__construct($terminal);
 
-	public function __construct($terminal) {
-		$this->terminal = $terminal;
-		$this->borderSet = self::$borderSetDouble;
+		$this->borderSet = $borderSet;
 	}
 
 	public function setPosition($x, $y) {
@@ -115,9 +112,19 @@ class Dialog {
 			->resetFormatting()
 			->format($this->borderFormats);
 
-		$topStr    = $this->makeLineFromBorder(0, 1, 2, $width);
-		$bottomStr = $this->makeLineFromBorder(6, 5, 4, $width);
-		$midStr    = $this->makeLineFromBorder(7, 8, 3, $width);
+		$topStr = $this->makeLine(
+			$this->borderSet->getTopLeftCorner(),
+			$this->borderSet->getTopEdge(),
+			$this->borderSet->getTopRightCorner(), $width);
+
+		$bottomStr = $this->makeLine(
+			$this->borderSet->getBottomLeftCorner(),
+			$this->borderSet->getBottomEdge(),
+			$this->borderSet->getBottomRightCorner(), $width);
+
+		$midStr = $this->makeLine(
+			$this->borderSet->getLeftEdge(), ' ',
+			$this->borderSet->getRightEdge(), $width);
 
 		$this->terminal
 			->setPosition($startX, $startY)
@@ -197,10 +204,7 @@ class Dialog {
 		}
 	}
 
-	protected function makeLineFromBorder($leftIndex, $middleIndex, $rightIndex, $width) {
-		$left = $this->borderSet[$leftIndex];
-		$right = $this->borderSet[$rightIndex];
-		$middle = $this->borderSet[$middleIndex];
+	protected function makeLine($left, $middle, $right, $width) {
 		return $left.str_repeat($middle, $width - 2).$right;
 	}
 }
