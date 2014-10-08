@@ -2,13 +2,10 @@
 
 namespace Cli\Gui;
 
-use \Cli\Gui\Traits\RowMemoryTrait;
-
-class Row {
-
-	use RowMemoryTrait;
+class Row extends Element {
 
 	protected $terminal;
+	protected $lastRow;
 
 	public function __construct($terminal, $lastRow = null) {
 		$this->terminal = $terminal;
@@ -16,15 +13,20 @@ class Row {
 	}
 
 	public function printf($format) {
-
-		$this->rememberRow($this->terminal);
-
-		$args = func_get_args();
-		$args[0] = trim($format, "\n")."\n";
+		$this->rememberRow();
 
 		$this->terminal->eraseLine();
+		$str = call_user_func_array('sprintf', func_get_args());
+		$this->terminal->printf(trim($str)."\n");
+	}
 
-		call_user_func_array([$this->terminal, 'printf'], $args);
+	protected function rememberRow() {
+		if (is_null($this->lastRow)) {
+			$this->terminal->printf('');
+			list($_, $this->lastRow) = $this->terminal->getPosition();
+		} else {
+			$this->terminal->setPosition(0, $this->lastRow);
+		}
 	}
 
 }

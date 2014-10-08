@@ -4,9 +4,7 @@ namespace Cli\Gui;
 
 use \Cli\Gui\Traits\RowMemoryTrait;
 
-class ProgressBar {
-
-	use RowMemoryTrait;
+class ProgressBar extends Row {
 
 	protected $label;
 	protected $elapsedSymbol;
@@ -18,6 +16,8 @@ class ProgressBar {
 
 	public function __construct($label, $elapsedSymbol, $remainingSymbol, array $elapsedFormats, $terminal, $lastRow = null) {
 
+		parent::__construct($terminal);
+
 		self::setLabel($label);
 		self::setElapsedSymbol($elapsedSymbol);
 		self::setRemainingSymbol($remainingSymbol);
@@ -25,8 +25,6 @@ class ProgressBar {
 
 		$this->spinOffset = 0;
 		$this->animationFrame = 0;
-
-		$this->terminal = $terminal;
 		$this->lastRow = $lastRow;
 	}
 
@@ -47,7 +45,7 @@ class ProgressBar {
 	}
 
 	public function spin() {
-		$this->rememberRow($this->terminal);
+		$this->rememberRow();
 		$width = min($this->terminal->getWidth() - strlen($this->label) + 1, 30);
 
 		$elapsedSymbol = $this->getElapsedSymbol();
@@ -69,7 +67,7 @@ class ProgressBar {
 
 	public function update($numerator, $denomenator) {
 
-		$this->rememberRow($this->terminal);
+		$this->rememberRow();
 
 		$width = $this->terminal->getWidth();
 
@@ -105,14 +103,6 @@ class ProgressBar {
 			return $this->elapsedSymbol[$this->animationFrame];
 		}
 		return $this->elapsedSymbol;
-	}
-
-	public function printf() {
-		$this->rememberRow($this->terminal);
-
-		$this->terminal->eraseLine();
-		$str = call_user_func_array('sprintf', func_get_args());
-		$this->terminal->printf(trim($str)."\n");
 	}
 
 }
