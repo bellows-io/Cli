@@ -2,7 +2,7 @@
 
 namespace Cli\Terminal;
 
-class Ansi {
+class Ansi implements TerminalInterface {
 
 	protected $stream;
 	protected $escape;
@@ -53,7 +53,7 @@ class Ansi {
 		return (int)`tput lines`;
 	}
 
-	public function move($up = 0, $forward = 0) {
+	public function move($up, $forward) {
 		$str = '';
 		if ($up > 0) {
 			$str .= sprintf("%dA", $up);
