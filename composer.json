@@ -1,5 +1,5 @@
 {
-	"name"        : "BitMoth/Cli",
+	"name"        : "bellows/cli",
 	"description" : "A CLI toolkit for fluid command line interaction",
 	"license"     : "proprietary",
 	"require"     : {},
