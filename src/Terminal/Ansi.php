@@ -53,6 +53,10 @@ class Ansi implements TerminalInterface {
 		return (int)`tput lines`;
 	}
 
+	public function setDimensions($width, $height) {
+		$this->command(sprintf("8;%0d;%0dt", $height, $width));
+	}
+
 	public function move($up, $forward) {
 		$str = '';
 		if ($up > 0) {
