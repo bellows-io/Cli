@@ -22,7 +22,7 @@ class RenderLoop {
 
 	public function onInterval($numSeconds, callable $callback) {
 		$this->intervalCallbacks[] = [
-			'elapsed' => 0,
+			'elapsed' => $numSeconds, // initially due for updates
 			'numSeconds' => $numSeconds,
 			'callback' => $callback
 		];
