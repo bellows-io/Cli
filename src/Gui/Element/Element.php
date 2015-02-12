@@ -1,6 +1,6 @@
 <?php
 
-namespace Cli\Gui;
+namespace Cli\Gui\Element;
 
 use \Cli\Gui\Traits\RowMemoryTrait;
 use \Cli\Terminal\TerminalInterface;

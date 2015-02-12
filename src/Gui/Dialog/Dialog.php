@@ -3,7 +3,7 @@
 namespace Cli\Gui\Dialog;
 
 use \Cli\Gui\Traits\RowMemoryTrait;
-use \Cli\Gui\Element;
+use \Cli\Gui\Element\Element;
 use \Cli\Gui\Borderset\Borderset;
 
 class Dialog extends Element {
@@ -136,7 +136,14 @@ class Dialog extends Element {
 		for ($y = 1; $y < $height - 1; $y++) {
 			$this->terminal->setPosition($startX, $startY + $y)->printf($midStr);
 		}
+	}
 
+	protected function eraseScreen() {
+		$height = $this->terminal->getHeight();
+		for ($i = 1; $i <= $height; $i++) {
+			$this->terminal->setPosition(1, $i)->eraseLine();
+		}
+		$this->terminal->setPosition(1, 1);
 	}
 
 	protected function drawShadow() {
