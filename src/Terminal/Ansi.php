@@ -161,7 +161,7 @@ class Ansi implements TerminalInterface {
 	public function readInput($callback, &$isControl = false) {
 		$term = `stty -g`;
 
-		system("stty -icanon -echo");
+		system("stty -icanon -echo intr ^-");
 
 		$buffer = '';
 		$charFound = false;
@@ -172,6 +172,10 @@ class Ansi implements TerminalInterface {
 			if ($c == $this->escape) {
 				$isControl = true;
 			} else {
+				if (ord($c) == 3) { // ctrl c
+					system("stty '".$term."'");
+					$this->handleExit();
+				}
 				$buffer .= $c;
 				if (! $isControl || $c != '[') {
 					$charFound = true;
@@ -188,6 +192,15 @@ class Ansi implements TerminalInterface {
 
 		system("stty '".$term."'");
 
+	}
+
+	protected function handleExit() {
+		$height = $this->getHeight();
+		for ($i = 1; $i <= $height; $i++) {
+			$this->setPosition(1, $i)->eraseLine();
+		}
+		$this->setPosition(1, 1);
+		exit;
 	}
 
 	protected function request($code) {
