@@ -158,16 +158,31 @@ class Ansi implements TerminalInterface {
 		fwrite($this->stream, $this->escape.'['.$string);
 	}
 
-	public function readInput($callback) {
+	public function readInput($callback, &$isControl = false) {
 		$term = `stty -g`;
 
 		system("stty -icanon -echo");
-		$b = '';
 
-		while ($c = fread(STDIN, 1)) {
-			$out = $callback($c);
-			if ($out === true) {
-				break;
+		$buffer = '';
+		$charFound = false;
+		$isControl = false;
+
+		while (true) {
+			$c = fread(STDIN, 1);
+			if ($c == $this->escape) {
+				$isControl = true;
+			} else {
+				$buffer .= $c;
+				if (! $isControl || $c != '[') {
+					$charFound = true;
+					$out = call_user_func($callback, $buffer, $isControl);
+					if ($out === true) {
+						break;
+					}
+					$charFount = false;
+					$isControl = false;
+					$buffer = '';
+				}
 			}
 		}
 
