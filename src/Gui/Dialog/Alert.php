@@ -8,7 +8,7 @@ use \Cli\Gui\Borderset\Borderset;
 class Alert extends Dialog {
 
 	protected $options;
-	protected $highlightFormat;
+	protected $highlightFormat = [];
 
 	public function __construct($terminal, $title, $contents, array $options, Borderset $borderset) {
 
@@ -38,11 +38,11 @@ class Alert extends Dialog {
 
 		$option = 0;
 		$this->drawButtons($option);
-		$this->terminal->readInput(function($char) use (&$option) {
-			if ($char == 'C') {
+		$this->terminal->readInput(function($char, $isControl) use (&$option) {
+			if ($char == '[C') {
 				$option = min($option + 1, count($this->options) - 1);
 				$this->drawButtons($option);
-			} else if ($char == 'D') {
+			} else if ($char == '[D') {
 				$option = max(0, $option - 1);
 				$this->drawButtons($option);
 			} else if ($char == "\n") {
