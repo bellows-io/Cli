@@ -174,7 +174,8 @@ class Ansi implements TerminalInterface {
 			} else {
 				if (ord($c) == 3) { // ctrl c
 					system("stty '".$term."'");
-					$this->handleExit();
+					$this->wipeScreen();
+					exit;
 				}
 				$buffer .= $c;
 				if (! $isControl || $c != '[') {
@@ -194,13 +195,12 @@ class Ansi implements TerminalInterface {
 
 	}
 
-	protected function handleExit() {
+	public function wipeScreen() {
 		$height = $this->getHeight();
 		for ($i = 1; $i <= $height; $i++) {
 			$this->setPosition(1, $i)->eraseLine();
 		}
 		$this->setPosition(1, 1);
-		exit;
 	}
 
 	protected function request($code) {
