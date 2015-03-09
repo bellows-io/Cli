@@ -134,7 +134,10 @@ class Ansi implements TerminalInterface {
 		return $this;
 	}
 
-	public function format($codes) {
+	public function format(array $codes) {
+		if (! $codes) {
+			return $this->resetFormatting();
+		}
 		$this->command(implode(';', $codes).'m');
 		return $this;
 	}
