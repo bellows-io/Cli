@@ -192,7 +192,10 @@ class Ansi implements TerminalInterface {
 		}
 
 		system("stty '".$term."'");
+	}
 
+	public function isTTY() {
+		return posix_isatty($this->stream);
 	}
 
 	public function wipeScreen() {
