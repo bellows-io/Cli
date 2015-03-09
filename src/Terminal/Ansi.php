@@ -148,7 +148,20 @@ class Ansi implements TerminalInterface {
 	}
 
 	public function printf($format /**, .. $arguments **/ ) {
-		$str = call_user_func_array('sprintf', func_get_args());
+		$args = func_get_args();
+		$str = vsprintf($format, array_slice($args, 1));
+		fwrite($this->stream, $str);
+		return $this;
+	}
+
+	public function vprintf($str, array $arguments, array $format = array()) {
+		$numArgs = func_num_args();
+		if ($numArgs >= 2) {
+			$str = vsprintf($str, $arguments);
+			if ($numArgs == 3) {
+				$this->format($format);
+			}
+		}
 		fwrite($this->stream, $str);
 		return $this;
 	}

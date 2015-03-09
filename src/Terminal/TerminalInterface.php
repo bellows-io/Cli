@@ -28,7 +28,8 @@ interface TerminalInterface {
 	public function restore();
 	public function format(array $format);
 	public function resetFormatting();
-	public function printf($format);
+	public function printf($template);
+	public function vprintf($template, array $args, array $format = array());
 	public function getStatus();
 	public function readInput($callback);
 
