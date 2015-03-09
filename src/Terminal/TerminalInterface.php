@@ -26,7 +26,7 @@ interface TerminalInterface {
 
 	public function save();
 	public function restore();
-	public function format($format);
+	public function format(array $format);
 	public function resetFormatting();
 	public function printf($format);
 	public function getStatus();
